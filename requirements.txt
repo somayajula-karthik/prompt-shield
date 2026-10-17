@@ -1,0 +1,3 @@
+# Core dependencies (Prompt Shield is designed with zero third-party runtime dependencies for maximum security & speed)
+# Development & Testing dependencies:
+pytest>=7.0.0
