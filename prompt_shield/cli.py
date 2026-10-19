@@ -9,6 +9,7 @@ from prompt_shield.algorithms.verhoeff import (
     validate_aadhaar,
     generate_valid_aadhaar,
 )
+from prompt_shield.detectors import detect_all
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -48,6 +49,22 @@ def create_parser() -> argparse.ArgumentParser:
         type=int,
         default=1,
         help="Number of synthetic Aadhaar numbers to generate (default: 1)",
+    )
+
+    # Command: detect
+    parser_det = subparsers.add_parser(
+        "detect",
+        help="Scan text or a text file and list detected Indian identifiers (Aadhaar, PAN).",
+    )
+    parser_det.add_argument(
+        "text",
+        nargs="?",
+        default=None,
+        help="Raw text string to scan",
+    )
+    parser_det.add_argument(
+        "-f", "--file",
+        help="Path to text file to scan",
     )
 
     # Command: mask (placeholder for Day 5 integration)
@@ -106,6 +123,34 @@ def main(argv=None) -> int:
         count = max(1, args.count)
         for _ in range(count):
             print(generate_valid_aadhaar(formatted=args.formatted))
+        return 0
+
+    elif args.command == "detect":
+        target_text = ""
+        if args.file:
+            try:
+                with open(args.file, "r", encoding="utf-8") as f:
+                    target_text = f.read()
+            except Exception as e:
+                print(f"[ERROR] Failed to read file: {e}", file=sys.stderr)
+                return 1
+        elif args.text:
+            target_text = args.text
+        else:
+            print("[ERROR] Please provide either a text string or a --file path to scan.", file=sys.stderr)
+            return 1
+
+        matches = detect_all(target_text)
+        if not matches:
+            print("[INFO] No Indian personal identifiers detected.")
+            return 0
+
+        print(f"Found {len(matches)} identifier(s):")
+        print("-" * 65)
+        for idx, m in enumerate(matches, 1):
+            detail = ", ".join(f"{k}={v}" for k, v in m.metadata.items())
+            print(f"{idx}. [{m.entity_type}] '{m.value}' (span {m.start}:{m.end}) -> {detail}")
+        print("-" * 65)
         return 0
 
     elif args.command == "mask":

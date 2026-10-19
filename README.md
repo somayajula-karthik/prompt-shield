@@ -85,10 +85,17 @@ pip install -r requirements.txt
 
 #### 1. Validate an Aadhaar Number using Verhoeff Checksum
 ```bash
-python -m prompt_shield.cli validate-aadhaar "2345 6789 0123"
+python -m prompt_shield.cli validate-aadhaar "2679 0377 4206"
 ```
 
-#### 2. Mask Sensitive Identifiers in a Document
+#### 2. Detect Indian Identifiers in Text or Documents
+```bash
+python -m prompt_shield.cli detect "Client Aadhaar: 2679 0377 4206, PAN: BZRPK4321A"
+# Or scan a file:
+python -m prompt_shield.cli detect --file document.txt
+```
+
+#### 3. Mask Sensitive Identifiers in a Document
 ```bash
 python -m prompt_shield.cli mask --input input.txt --output masked.txt --vault session_vault.json
 ```
