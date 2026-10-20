@@ -54,7 +54,7 @@ def create_parser() -> argparse.ArgumentParser:
     # Command: detect
     parser_det = subparsers.add_parser(
         "detect",
-        help="Scan text or a text file and list detected Indian identifiers (Aadhaar, PAN).",
+        help="Scan text or a text file and list detected Indian identifiers (Aadhaar, PAN, UPI, IFSC, Phone).",
     )
     parser_det.add_argument(
         "text",

@@ -90,7 +90,7 @@ python -m prompt_shield.cli validate-aadhaar "2679 0377 4206"
 
 #### 2. Detect Indian Identifiers in Text or Documents
 ```bash
-python -m prompt_shield.cli detect "Client Aadhaar: 2679 0377 4206, PAN: BZRPK4321A"
+python -m prompt_shield.cli detect "Client phone: +91 98765 43210, Aadhaar: 2679 0377 4206, PAN: BZRPK4321A, IFSC: SBIN0001234, UPI: user@oksbi"
 # Or scan a file:
 python -m prompt_shield.cli detect --file document.txt
 ```
@@ -100,7 +100,7 @@ python -m prompt_shield.cli detect --file document.txt
 python -m prompt_shield.cli mask --input input.txt --output masked.txt --vault session_vault.json
 ```
 
-#### 3. Unmask and Restore Real Values from AI Response
+#### 4. Unmask and Restore Real Values from AI Response
 ```bash
 python -m prompt_shield.cli unmask --input ai_response.txt --vault session_vault.json --output restored.txt
 ```
