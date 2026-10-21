@@ -105,6 +105,11 @@ python -m prompt_shield.cli mask --input input.txt --output masked.txt --vault s
 python -m prompt_shield.cli unmask --input ai_response.txt --vault session_vault.json --output restored.txt
 ```
 
+#### 5. Inspect Session Vault Mappings
+```bash
+python -m prompt_shield.cli inspect-vault --vault session_vault.json
+```
+
 ---
 
 ## Running Unit Tests

@@ -99,6 +99,15 @@ def create_parser() -> argparse.ArgumentParser:
         "-o", "--output", required=True, help="Path to restored output file"
     )
 
+    # Command: inspect-vault
+    parser_insp = subparsers.add_parser(
+        "inspect-vault",
+        help="Inspect mappings and statistics stored in a session vault JSON file.",
+    )
+    parser_insp.add_argument(
+        "--vault", required=True, help="Path to session vault JSON file"
+    )
+
     return parser
 
 
@@ -159,6 +168,29 @@ def main(argv=None) -> int:
 
     elif args.command == "unmask":
         print("[INFO] Full reverse mapping engine scheduled for Day 5 per timeline.")
+        return 0
+
+    elif args.command == "inspect-vault":
+        from prompt_shield.engine.vault import SessionVault
+        try:
+            vault = SessionVault.load(args.vault)
+        except Exception as e:
+            print(f"[ERROR] Failed to load session vault: {e}", file=sys.stderr)
+            return 1
+
+        entries = vault.get_all_entries()
+        summary = vault.summary()
+        print(f"Session Vault: {args.vault}")
+        print(f"Total Unique Entities: {len(entries)}")
+        print("Breakdown by Type:")
+        for entity_type, count in sorted(summary.items()):
+            print(f"  - {entity_type}: {count}")
+        print("-" * 75)
+        print(f"{'TYPE':<10} {'ORIGINAL VALUE':<26} {'SURROGATE VALUE':<26} {'COUNT':<5}")
+        print("-" * 75)
+        for e in entries:
+            print(f"{e.entity_type:<10} {e.real_value:<26} {e.surrogate_value:<26} {e.occurrence_count:<5}")
+        print("-" * 75)
         return 0
 
     return 0
