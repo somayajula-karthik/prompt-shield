@@ -163,11 +163,104 @@ def main(argv=None) -> int:
         return 0
 
     elif args.command == "mask":
-        print("[INFO] Full masking engine scheduled for Day 5 per timeline.")
+        from pathlib import Path
+        from prompt_shield.engine import SessionVault, mask_text
+
+        in_path = Path(args.input)
+        if not in_path.exists():
+            print(f"[ERROR] Input file not found: {args.input}", file=sys.stderr)
+            return 1
+
+        try:
+            with open(in_path, "r", encoding="utf-8", newline="") as f:
+                raw_text = f.read()
+        except Exception as e:
+            print(f"[ERROR] Could not read input file: {e}", file=sys.stderr)
+            return 1
+
+        # Load or create vault
+        vault_path = Path(args.vault)
+        if vault_path.exists():
+            try:
+                vault = SessionVault.load(str(vault_path))
+            except Exception as e:
+                print(f"[ERROR] Failed to load existing vault: {e}", file=sys.stderr)
+                return 1
+        else:
+            vault = SessionVault()
+
+        masked_text, vault, matches = mask_text(raw_text, vault=vault)
+
+        # Write output file
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with open(out_path, "w", encoding="utf-8", newline="") as f:
+                f.write(masked_text)
+        except Exception as e:
+            print(f"[ERROR] Could not write output file: {e}", file=sys.stderr)
+            return 1
+
+        # Save updated vault
+        try:
+            vault.save(str(vault_path))
+        except Exception as e:
+            print(f"[ERROR] Could not save session vault: {e}", file=sys.stderr)
+            return 1
+
+        print(f"[SUCCESS] Masked {len(matches)} identifier(s).")
+        print(f"Output written to: {args.output}")
+        print(f"Session vault updated: {args.vault}")
+        if matches:
+            print("-" * 75)
+            print(f"{'TYPE':<10} {'ORIGINAL VALUE':<26} {'SURROGATE VALUE':<26}")
+            print("-" * 75)
+            for m in matches:
+                surrogate = vault.get_or_create_surrogate(m.entity_type, m.value)
+                print(f"{m.entity_type:<10} {m.value:<26} {surrogate:<26}")
+            print("-" * 75)
         return 0
 
     elif args.command == "unmask":
-        print("[INFO] Full reverse mapping engine scheduled for Day 5 per timeline.")
+        from pathlib import Path
+        from prompt_shield.engine import SessionVault, unmask_text
+
+        in_path = Path(args.input)
+        if not in_path.exists():
+            print(f"[ERROR] Input file not found: {args.input}", file=sys.stderr)
+            return 1
+
+        vault_path = Path(args.vault)
+        if not vault_path.exists():
+            print(f"[ERROR] Vault file not found: {args.vault}", file=sys.stderr)
+            return 1
+
+        try:
+            with open(in_path, "r", encoding="utf-8", newline="") as f:
+                masked_content = f.read()
+        except Exception as e:
+            print(f"[ERROR] Could not read input file: {e}", file=sys.stderr)
+            return 1
+
+        try:
+            vault = SessionVault.load(str(vault_path))
+        except Exception as e:
+            print(f"[ERROR] Failed to load session vault: {e}", file=sys.stderr)
+            return 1
+
+        restored_text = unmask_text(masked_content, vault=vault)
+
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with open(out_path, "w", encoding="utf-8", newline="") as f:
+                f.write(restored_text)
+        except Exception as e:
+            print(f"[ERROR] Could not write restored output file: {e}", file=sys.stderr)
+            return 1
+
+        print(f"[SUCCESS] Reverse-mapping complete.")
+        print(f"Restored file written to: {args.output}")
         return 0
 
     elif args.command == "inspect-vault":
