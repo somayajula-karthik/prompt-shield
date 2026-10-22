@@ -110,6 +110,11 @@ python -m prompt_shield.cli unmask --input ai_response.txt --vault session_vault
 python -m prompt_shield.cli inspect-vault --vault session_vault.json
 ```
 
+#### 6. Inspect & Validate Synthetic Evaluation Dataset
+```bash
+python -m prompt_shield.cli inspect-dataset --dataset data/samples_eval.json
+```
+
 ---
 
 ## Running Unit Tests

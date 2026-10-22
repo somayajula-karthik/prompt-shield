@@ -108,6 +108,17 @@ def create_parser() -> argparse.ArgumentParser:
         "--vault", required=True, help="Path to session vault JSON file"
     )
 
+    # Command: inspect-dataset
+    parser_ds = subparsers.add_parser(
+        "inspect-dataset",
+        help="Inspect and validate the 50-sample synthetic evaluation benchmark dataset.",
+    )
+    parser_ds.add_argument(
+        "--dataset",
+        default="data/samples_eval.json",
+        help="Path to evaluation dataset JSON (default: data/samples_eval.json)",
+    )
+
     return parser
 
 
@@ -285,6 +296,41 @@ def main(argv=None) -> int:
             print(f"{e.entity_type:<10} {e.real_value:<26} {e.surrogate_value:<26} {e.occurrence_count:<5}")
         print("-" * 75)
         return 0
+
+    elif args.command == "inspect-dataset":
+        from prompt_shield.evaluation.dataset import (
+            load_evaluation_dataset,
+            validate_dataset,
+            dataset_summary,
+        )
+
+        try:
+            samples = load_evaluation_dataset(args.dataset)
+        except Exception as e:
+            print(f"[ERROR] Failed to load dataset: {e}", file=sys.stderr)
+            return 1
+
+        is_valid, errors = validate_dataset(samples)
+        summary = dataset_summary(samples)
+
+        print(f"Evaluation Dataset: {args.dataset}")
+        print(f"Total Samples: {summary['total_samples']} (Positive: {summary['positive_samples']}, Negative/Distractors: {summary['negative_samples']})")
+        print(f"Total Annotated Entities: {summary['total_entities']}")
+        print("\nDomain Distribution:")
+        for domain, count in sorted(summary["domains"].items()):
+            print(f"  - {domain:<18}: {count} sample(s)")
+        print("\nEntity Type Distribution:")
+        for ent_type, count in sorted(summary["entity_counts"].items()):
+            print(f"  - {ent_type:<18}: {count} entity annotation(s)")
+        print("-" * 75)
+        if is_valid:
+            print("[STATUS] Integrity Check: PASSED (All character spans match exact text slices)")
+        else:
+            print(f"[STATUS] Integrity Check: FAILED with {len(errors)} error(s):")
+            for err in errors[:5]:
+                print(f"  ! {err}")
+        print("-" * 75)
+        return 0 if is_valid else 1
 
     return 0
 

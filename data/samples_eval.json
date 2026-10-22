@@ -1,0 +1,728 @@
+[
+  {
+    "id": "bank_01",
+    "domain": "banking",
+    "text": "Loan application received for Suresh Iyer. Primary contact +91 98765 43210 and Aadhaar 9897 4631 5912 submitted.",
+    "entities": [
+      {
+        "entity_type": "PHONE",
+        "start": 59,
+        "end": 74,
+        "value": "+91 98765 43210"
+      },
+      {
+        "entity_type": "AADHAAR",
+        "start": 87,
+        "end": 101,
+        "value": "9897 4631 5912"
+      }
+    ]
+  },
+  {
+    "id": "bank_02",
+    "domain": "banking",
+    "text": "Please disburse funds to account with IFSC SBIN0001234 linked to PAN BZRPK4321A.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 43,
+        "end": 54,
+        "value": "SBIN0001234"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 69,
+        "end": 79,
+        "value": "BZRPK4321A"
+      }
+    ]
+  },
+  {
+    "id": "bank_03",
+    "domain": "banking",
+    "text": "Customer KYC verified with Aadhaar 653558525570 and PAN AFKPR8912K.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 35,
+        "end": 47,
+        "value": "653558525570"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 56,
+        "end": 66,
+        "value": "AFKPR8912K"
+      }
+    ]
+  },
+  {
+    "id": "bank_04",
+    "domain": "banking",
+    "text": "Mandate registered for recurring repayment via UPI suresh.iyer@okhdfcbank against phone 9876543210.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 51,
+        "end": 73,
+        "value": "suresh.iyer@okhdfcbank"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 88,
+        "end": 98,
+        "value": "9876543210"
+      }
+    ]
+  },
+  {
+    "id": "bank_05",
+    "domain": "banking",
+    "text": "Commercial loan file for M/s Apex Tech: Corporate PAN AAACB1234C and branch IFSC HDFC0005678.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 54,
+        "end": 64,
+        "value": "AAACB1234C"
+      },
+      {
+        "entity_type": "IFSC",
+        "start": 81,
+        "end": 92,
+        "value": "HDFC0005678"
+      }
+    ]
+  },
+  {
+    "id": "bank_06",
+    "domain": "banking",
+    "text": "RTGS transfer request initiated: Beneficiary IFSC ICIC0000999 with callback to +91-87654-32109.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 50,
+        "end": 61,
+        "value": "ICIC0000999"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 79,
+        "end": 94,
+        "value": "+91-87654-32109"
+      }
+    ]
+  },
+  {
+    "id": "bank_07",
+    "domain": "banking",
+    "text": "Joint borrower application: Aadhaar 7252 6068 1355 and mobile 098765 43210.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 36,
+        "end": 50,
+        "value": "7252 6068 1355"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 62,
+        "end": 74,
+        "value": "098765 43210"
+      }
+    ]
+  },
+  {
+    "id": "bank_08",
+    "domain": "banking",
+    "text": "Fixed Deposit lien marked for tax audit under PAN DKRPJ7712M.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 50,
+        "end": 60,
+        "value": "DKRPJ7712M"
+      }
+    ]
+  },
+  {
+    "id": "bank_09",
+    "domain": "banking",
+    "text": "Account closure request for IFSC UTIB0000123 submitted by holder of PAN CKLPA4521E.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 33,
+        "end": 44,
+        "value": "UTIB0000123"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 72,
+        "end": 82,
+        "value": "CKLPA4521E"
+      }
+    ]
+  },
+  {
+    "id": "bank_10",
+    "domain": "banking",
+    "text": "Home loan sanction note: Co-applicant Aadhaar 425364200617 verified via OTP on +91 78901 23456.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 46,
+        "end": 58,
+        "value": "425364200617"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 79,
+        "end": 94,
+        "value": "+91 78901 23456"
+      }
+    ]
+  },
+  {
+    "id": "health_01",
+    "domain": "healthcare",
+    "text": "Patient Admission: Ramesh Rao, Emergency Phone: +91 91234 56789, Identity Aadhaar: 9950 3022 5898.",
+    "entities": [
+      {
+        "entity_type": "PHONE",
+        "start": 48,
+        "end": 63,
+        "value": "+91 91234 56789"
+      },
+      {
+        "entity_type": "AADHAAR",
+        "start": 83,
+        "end": 97,
+        "value": "9950 3022 5898"
+      }
+    ]
+  },
+  {
+    "id": "health_02",
+    "domain": "healthcare",
+    "text": "Discharge Summary for Apollo Clinic: Insurance billing under PAN GHRPK9012N cleared.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 65,
+        "end": 75,
+        "value": "GHRPK9012N"
+      }
+    ]
+  },
+  {
+    "id": "health_03",
+    "domain": "healthcare",
+    "text": "Diagnostic Lab Report: Fasting Glucose 142 mg/dL. Billing UPI: care.billing@paytm.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 63,
+        "end": 81,
+        "value": "care.billing@paytm"
+      }
+    ]
+  },
+  {
+    "id": "health_04",
+    "domain": "healthcare",
+    "text": "Doctor teleconsultation booked: Follow up with patient on 9812345678.",
+    "entities": [
+      {
+        "entity_type": "PHONE",
+        "start": 58,
+        "end": 68,
+        "value": "9812345678"
+      }
+    ]
+  },
+  {
+    "id": "health_05",
+    "domain": "healthcare",
+    "text": "Medical reimbursement claim: Hospital IFSC BARB0BIMLKO and patient PAN JKLPB1290K submitted.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 43,
+        "end": 54,
+        "value": "BARB0BIMLKO"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 71,
+        "end": 81,
+        "value": "JKLPB1290K"
+      }
+    ]
+  },
+  {
+    "id": "health_06",
+    "domain": "healthcare",
+    "text": "Pathology center requisition: Patient Aadhaar 444457488502 for health record integration.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 46,
+        "end": 58,
+        "value": "444457488502"
+      }
+    ]
+  },
+  {
+    "id": "health_07",
+    "domain": "healthcare",
+    "text": "Emergency Ward Triage: Next of kin contact +91 69876 54321, Aadhaar ID 9469 6438 2652.",
+    "entities": [
+      {
+        "entity_type": "PHONE",
+        "start": 43,
+        "end": 58,
+        "value": "+91 69876 54321"
+      },
+      {
+        "entity_type": "AADHAAR",
+        "start": 71,
+        "end": 85,
+        "value": "9469 6438 2652"
+      }
+    ]
+  },
+  {
+    "id": "health_08",
+    "domain": "healthcare",
+    "text": "Pharmacy invoice: Consultation fee paid via UPI medicos.delhi@ybl, prescription filed.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 48,
+        "end": 65,
+        "value": "medicos.delhi@ybl"
+      }
+    ]
+  },
+  {
+    "id": "health_09",
+    "domain": "healthcare",
+    "text": "Surgeon referral note: Senior consultant contact available at 087654 32109.",
+    "entities": [
+      {
+        "entity_type": "PHONE",
+        "start": 62,
+        "end": 74,
+        "value": "087654 32109"
+      }
+    ]
+  },
+  {
+    "id": "health_10",
+    "domain": "healthcare",
+    "text": "Health insurance cashless settlement: TPA PAN AAACT8921B and settlement bank IFSC KKBK0000214.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 46,
+        "end": 56,
+        "value": "AAACT8921B"
+      },
+      {
+        "entity_type": "IFSC",
+        "start": 82,
+        "end": 93,
+        "value": "KKBK0000214"
+      }
+    ]
+  },
+  {
+    "id": "tax_01",
+    "domain": "tax_payroll",
+    "text": "Form 16 Part A: Employee PAN BNZPS2391L, Employer PAN DELCA1298H.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 29,
+        "end": 39,
+        "value": "BNZPS2391L"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 54,
+        "end": 64,
+        "value": "DELCA1298H"
+      }
+    ]
+  },
+  {
+    "id": "tax_02",
+    "domain": "tax_payroll",
+    "text": "Salary Slip Sept 2026: Gross Rs. 95,000 credited to IFSC PUNB0024900 for PAN CKLPS9012J.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 57,
+        "end": 68,
+        "value": "PUNB0024900"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 77,
+        "end": 87,
+        "value": "CKLPS9012J"
+      }
+    ]
+  },
+  {
+    "id": "tax_03",
+    "domain": "tax_payroll",
+    "text": "ITR-1 Sahaj Acknowledgement: Taxpayer linked Aadhaar 999273751535 with mobile +91 97654 32109.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 53,
+        "end": 65,
+        "value": "999273751535"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 78,
+        "end": 93,
+        "value": "+91 97654 32109"
+      }
+    ]
+  },
+  {
+    "id": "tax_04",
+    "domain": "tax_payroll",
+    "text": "Employee Provident Fund nomination: Aadhaar 8711 4518 5798 registered with UAN.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 44,
+        "end": 58,
+        "value": "8711 4518 5798"
+      }
+    ]
+  },
+  {
+    "id": "tax_05",
+    "domain": "tax_payroll",
+    "text": "Direct tax challan 280: Self assessment payment by PAN EWMPS4512D confirmed.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 55,
+        "end": 65,
+        "value": "EWMPS4512D"
+      }
+    ]
+  },
+  {
+    "id": "tax_06",
+    "domain": "tax_payroll",
+    "text": "Consultant retainer payout: Remitted via IFSC CNRB0001020 to individual PAN FKLPM7812G.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 46,
+        "end": 57,
+        "value": "CNRB0001020"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 76,
+        "end": 86,
+        "value": "FKLPM7812G"
+      }
+    ]
+  },
+  {
+    "id": "tax_07",
+    "domain": "tax_payroll",
+    "text": "HR Onboarding: Verified Aadhaar 832219484645, PAN GLKPS3412R, and phone 9819234567.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 32,
+        "end": 44,
+        "value": "832219484645"
+      },
+      {
+        "entity_type": "PAN",
+        "start": 50,
+        "end": 60,
+        "value": "GLKPS3412R"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 72,
+        "end": 82,
+        "value": "9819234567"
+      }
+    ]
+  },
+  {
+    "id": "tax_08",
+    "domain": "tax_payroll",
+    "text": "Gratuity settlement advice: Bank account IFSC UBIN0531201 verified by finance.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 46,
+        "end": 57,
+        "value": "UBIN0531201"
+      }
+    ]
+  },
+  {
+    "id": "tax_09",
+    "domain": "tax_payroll",
+    "text": "Advance tax calculation query: Individual PAN HJLPS9041K income slab assessment.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 46,
+        "end": 56,
+        "value": "HJLPS9041K"
+      }
+    ]
+  },
+  {
+    "id": "tax_10",
+    "domain": "tax_payroll",
+    "text": "Quarterly TDS Certificate: Deductee PAN JKLPS1290P linked to phone +91-91234-56780.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 40,
+        "end": 50,
+        "value": "JKLPS1290P"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 67,
+        "end": 82,
+        "value": "+91-91234-56780"
+      }
+    ]
+  },
+  {
+    "id": "ecom_01",
+    "domain": "ecommerce",
+    "text": "Order #98124 refund of Rs 1,499 initiated to UPI ananya.sharma@okaxis.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 49,
+        "end": 69,
+        "value": "ananya.sharma@okaxis"
+      }
+    ]
+  },
+  {
+    "id": "ecom_02",
+    "domain": "ecommerce",
+    "text": "Delivery courier update: Delivery executive reaching via mobile 7890123456.",
+    "entities": [
+      {
+        "entity_type": "PHONE",
+        "start": 64,
+        "end": 74,
+        "value": "7890123456"
+      }
+    ]
+  },
+  {
+    "id": "ecom_03",
+    "domain": "ecommerce",
+    "text": "Payment failed on gateway: Re-attempt payment with UPI rohit99@okicici.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 55,
+        "end": 70,
+        "value": "rohit99@okicici"
+      }
+    ]
+  },
+  {
+    "id": "ecom_04",
+    "domain": "ecommerce",
+    "text": "Merchant store settlement: Weekly payout transferred to IFSC YESB0000101.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 61,
+        "end": 72,
+        "value": "YESB0000101"
+      }
+    ]
+  },
+  {
+    "id": "ecom_05",
+    "domain": "ecommerce",
+    "text": "Customer support dispute: Transaction ID TXN-9214 linked to VPA support.pay@upi.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 64,
+        "end": 79,
+        "value": "support.pay@upi"
+      }
+    ]
+  },
+  {
+    "id": "ecom_06",
+    "domain": "ecommerce",
+    "text": "Cashback credited: Amount of Rs 250 sent to user mobile +91 89012 34567.",
+    "entities": [
+      {
+        "entity_type": "PHONE",
+        "start": 56,
+        "end": 71,
+        "value": "+91 89012 34567"
+      }
+    ]
+  },
+  {
+    "id": "ecom_07",
+    "domain": "ecommerce",
+    "text": "Vendor billing: Invoice generated under business PAN AABCF1209M with VPA vendor.hub@ibl.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 53,
+        "end": 63,
+        "value": "AABCF1209M"
+      },
+      {
+        "entity_type": "UPI",
+        "start": 73,
+        "end": 87,
+        "value": "vendor.hub@ibl"
+      }
+    ]
+  },
+  {
+    "id": "ecom_08",
+    "domain": "ecommerce",
+    "text": "Wallet top-up confirmation: Rs 5,000 deducted via UPI deepak_k@oksbi.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 54,
+        "end": 68,
+        "value": "deepak_k@oksbi"
+      }
+    ]
+  },
+  {
+    "id": "chat_01",
+    "domain": "casual_chat",
+    "text": "Hey, you can GPay me the dinner money at karthik.s@okaxis or call me on +91 98490 12345.",
+    "entities": [
+      {
+        "entity_type": "UPI",
+        "start": 41,
+        "end": 57,
+        "value": "karthik.s@okaxis"
+      },
+      {
+        "entity_type": "PHONE",
+        "start": 72,
+        "end": 87,
+        "value": "+91 98490 12345"
+      }
+    ]
+  },
+  {
+    "id": "chat_02",
+    "domain": "casual_chat",
+    "text": "Sending you my Aadhaar 6661 1252 8256 for hotel check-in booking.",
+    "entities": [
+      {
+        "entity_type": "AADHAAR",
+        "start": 23,
+        "end": 37,
+        "value": "6661 1252 8256"
+      }
+    ]
+  },
+  {
+    "id": "chat_03",
+    "domain": "casual_chat",
+    "text": "Please send the rent via NEFT to IFSC IDFB0040101, let me know when done.",
+    "entities": [
+      {
+        "entity_type": "IFSC",
+        "start": 38,
+        "end": 49,
+        "value": "IDFB0040101"
+      }
+    ]
+  },
+  {
+    "id": "chat_04",
+    "domain": "casual_chat",
+    "text": "HR asked for my PAN MNKPS8912T and photo ID before Monday.",
+    "entities": [
+      {
+        "entity_type": "PAN",
+        "start": 20,
+        "end": 30,
+        "value": "MNKPS8912T"
+      }
+    ]
+  },
+  {
+    "id": "neg_01",
+    "domain": "distractor",
+    "text": "Quarterly engineering sprint review at 10:30 AM on 15/10/2026 with 45 attendees. Target: 99.9% uptime.",
+    "entities": []
+  },
+  {
+    "id": "neg_02",
+    "domain": "distractor",
+    "text": "Invalid Aadhaar test case 2679 0377 4207 (checksum mutated by 1) must be ignored by shield.",
+    "entities": []
+  },
+  {
+    "id": "neg_03",
+    "domain": "distractor",
+    "text": "Contact our university placement office at coordinator@osmania.ac.in or support@pragyacyber.com.",
+    "entities": []
+  },
+  {
+    "id": "neg_04",
+    "domain": "distractor",
+    "text": "Dummy string ABCXE1234F is not a PAN because 'X' is an invalid 4th taxpayer status character.",
+    "entities": []
+  },
+  {
+    "id": "neg_05",
+    "domain": "distractor",
+    "text": "Invalid bank code SBIN1001234 is not an IFSC because the 5th character must be zero.",
+    "entities": []
+  },
+  {
+    "id": "neg_06",
+    "domain": "distractor",
+    "text": "Please transfer payment to 16-digit debit card number 4111222233334444 (VISA test card).",
+    "entities": []
+  },
+  {
+    "id": "neg_07",
+    "domain": "distractor",
+    "text": "Git commit SHA-1 hash a59d0dd1234567890abcdef1234567890abcdef1 pushed successfully to origin.",
+    "entities": []
+  },
+  {
+    "id": "neg_08",
+    "domain": "distractor",
+    "text": "Server metrics: CPU load 18%, 1024MB allocated, response latency 24ms, HTTP 200 OK.",
+    "entities": []
+  }
+]
