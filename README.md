@@ -122,6 +122,21 @@ python -m prompt_shield.cli eval --dataset data/samples_eval.json -o data/eval_r
 
 ---
 
+## Documentation
+
+| Document | Contents |
+|---|---|
+| [docs/REPORT.md](docs/REPORT.md) | Two-page technical note: approach, evaluation, trade-offs, next steps |
+| [docs/FAILURES.md](docs/FAILURES.md) | Failure analysis with reproducible evidence and root causes |
+| [docs/DEMO.md](docs/DEMO.md) | 10-minute live demo script |
+| [scripts/failure_probes.py](scripts/failure_probes.py) | Adversarial probes that reproduce every documented failure |
+
+```bash
+python scripts/failure_probes.py
+```
+
+---
+
 ## Running Unit Tests
 
 ```bash

@@ -1,0 +1,10 @@
+LOAN SANCTION & DISBURSAL REQUEST
+---------------------------------
+Applicant Name: Vikram Joshi
+Registered Mobile: +91 98765 43210
+Aadhaar Number: 2679 0377 4206
+PAN Number: BZRPK4321A
+Primary Salary Bank: SBI (IFSC: SBIN0001234)
+Primary VPA: vikram.joshi@okhdfcbank
+
+Note: Disburse the loan to the account linked to PAN BZRPK4321A.
