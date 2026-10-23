@@ -115,6 +115,11 @@ python -m prompt_shield.cli inspect-vault --vault session_vault.json
 python -m prompt_shield.cli inspect-dataset --dataset data/samples_eval.json
 ```
 
+#### 7. Run Precision & Recall Benchmark Evaluation
+```bash
+python -m prompt_shield.cli eval --dataset data/samples_eval.json -o data/eval_report.json
+```
+
 ---
 
 ## Running Unit Tests

@@ -119,6 +119,27 @@ def create_parser() -> argparse.ArgumentParser:
         help="Path to evaluation dataset JSON (default: data/samples_eval.json)",
     )
 
+    # Command: eval
+    parser_eval = subparsers.add_parser(
+        "eval",
+        help="Run benchmark evaluation measuring Precision, Recall, and F1 on a dataset.",
+    )
+    parser_eval.add_argument(
+        "--dataset",
+        default="data/samples_eval.json",
+        help="Path to evaluation dataset JSON (default: data/samples_eval.json)",
+    )
+    parser_eval.add_argument(
+        "-o", "--output",
+        default=None,
+        help="Optional path to export full evaluation JSON report",
+    )
+    parser_eval.add_argument(
+        "--detailed",
+        action="store_true",
+        help="Display detailed discrepancy logs (misses and false alarms)",
+    )
+
     return parser
 
 
@@ -331,6 +352,60 @@ def main(argv=None) -> int:
                 print(f"  ! {err}")
         print("-" * 75)
         return 0 if is_valid else 1
+
+    elif args.command == "eval":
+        from prompt_shield.evaluation import (
+            load_evaluation_dataset,
+            evaluate_dataset,
+        )
+
+        try:
+            samples = load_evaluation_dataset(args.dataset)
+        except Exception as e:
+            print(f"[ERROR] Failed to load dataset: {e}", file=sys.stderr)
+            return 1
+
+        print(f"Running Benchmark Evaluation on: {args.dataset}")
+        print(f"Total Test Samples: {len(samples)}")
+        report = evaluate_dataset(samples, strict_span=True)
+
+        print("\n" + "=" * 78)
+        print("PROMPT SHIELD -- DETECTION BENCHMARK EVALUATION RESULTS")
+        print("=" * 78)
+        header = f"{'ENTITY TYPE':<12} {'TP':>4} {'FP':>4} {'FN':>4} {'PRECISION':>12} {'RECALL':>12} {'F1-SCORE':>12} {'SUPPORT':>8}"
+        print(header)
+        print("-" * 78)
+
+        for ent_type in sorted(report.metrics_by_type.keys()):
+            m = report.metrics_by_type[ent_type]
+            p_str = f"{m.precision * 100:.1f}%"
+            r_str = f"{m.recall * 100:.1f}%"
+            f_str = f"{m.f1 * 100:.1f}%"
+            print(f"{m.entity_type:<12} {m.tp:>4} {m.fp:>4} {m.fn:>4} {p_str:>12} {r_str:>12} {f_str:>12} {m.support:>8}")
+
+        print("-" * 78)
+        ov = report.overall
+        ov_p = f"{ov.precision * 100:.1f}%"
+        ov_r = f"{ov.recall * 100:.1f}%"
+        ov_f = f"{ov.f1 * 100:.1f}%"
+        print(f"{'OVERALL':<12} {ov.tp:>4} {ov.fp:>4} {ov.fn:>4} {ov_p:>12} {ov_r:>12} {ov_f:>12} {ov.support:>8}")
+        print("=" * 78)
+
+        print(f"Negative Distractor Samples Tested: {report.negative_samples} (False Positives on Negative Set: {ov.fp})")
+
+        if args.detailed and report.discrepancies:
+            print("\nDiagnostic Discrepancies:")
+            for d in report.discrepancies:
+                print(f"  [{d.sample_id}] {d.error_type} on {d.entity_type}: '{d.value}' -> Context: ...{d.context_snippet}...")
+
+        if args.output:
+            try:
+                report.save(args.output)
+                print(f"\n[INFO] Full benchmark report saved to: {args.output}")
+            except Exception as e:
+                print(f"[ERROR] Failed to save report JSON: {e}", file=sys.stderr)
+
+        return 0
 
     return 0
 

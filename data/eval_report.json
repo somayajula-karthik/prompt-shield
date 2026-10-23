@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-10-23T05:45:06.367750+00:00",
+  "total_samples": 50,
+  "positive_samples": 42,
+  "negative_samples": 8,
+  "overall": {
+    "entity_type": "OVERALL",
+    "tp": 64,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "support": 64
+  },
+  "by_type": {
+    "PAN": {
+      "entity_type": "PAN",
+      "tp": 18,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 18
+    },
+    "UPI": {
+      "entity_type": "UPI",
+      "tp": 9,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    },
+    "AADHAAR": {
+      "entity_type": "AADHAAR",
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 11
+    },
+    "PHONE": {
+      "entity_type": "PHONE",
+      "tp": 15,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 15
+    },
+    "IFSC": {
+      "entity_type": "IFSC",
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 11
+    }
+  },
+  "discrepancies_count": 0,
+  "discrepancies": []
+}
