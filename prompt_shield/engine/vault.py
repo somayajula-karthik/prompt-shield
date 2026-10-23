@@ -10,6 +10,7 @@ from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Set
+from prompt_shield.algorithms.verhoeff import clean_digits
 from prompt_shield.engine.generator import SurrogateGenerator
 
 
@@ -43,28 +44,48 @@ class SessionVault:
     Guarantees:
     - Consistency: The exact same real identifier always maps to the same surrogate within a session.
     - Uniqueness: Two different real identifiers never share the same surrogate.
-    - Reversibility: Any generated surrogate can be mapped back to its original value.
+    - Reversibility: Any generated surrogate (including reformatted variants) can be mapped back.
     - Persistence: Can be exported to and imported from JSON.
     """
 
     def __init__(self, generator: Optional[SurrogateGenerator] = None):
         self.generator = generator or SurrogateGenerator()
-        # Key: (entity_type, real_value_normalized) -> VaultEntry
+        # Key: canonical real key -> VaultEntry
         self._entries_by_real: Dict[str, VaultEntry] = {}
-        # Key: surrogate_value -> VaultEntry
+        # Key: exact surrogate_value -> VaultEntry
         self._entries_by_surrogate: Dict[str, VaultEntry] = {}
         # Set of active surrogates for fast collision prevention
         self._active_surrogates: Set[str] = set()
 
     @staticmethod
-    def _normalize_key(entity_type: str, real_value: str) -> str:
+    def canonicalize_token(entity_type: str, value: str) -> str:
+        """
+        Produce a formatting-independent canonical token for an identifier.
+        - AADHAAR: 12 raw digits
+        - PHONE: 10 core mobile digits (stripping +91, 91, or leading 0)
+        - PAN / IFSC: uppercase trimmed string
+        - UPI: lowercase trimmed string
+        """
+        raw = value.strip()
+        if entity_type == "AADHAAR":
+            return clean_digits(raw)
+        if entity_type == "PHONE":
+            digits = clean_digits(raw)
+            if len(digits) == 12 and digits.startswith("91"):
+                return digits[2:]
+            if len(digits) == 11 and digits.startswith("0"):
+                return digits[1:]
+            return digits
+        if entity_type in ("PAN", "IFSC"):
+            return raw.upper()
+        if entity_type == "UPI":
+            return raw.lower()
+        return raw
+
+    @classmethod
+    def _normalize_key(cls, entity_type: str, real_value: str) -> str:
         """Create a stable canonical key for lookup."""
-        clean = real_value.strip()
-        if entity_type == "PAN" or entity_type == "IFSC":
-            clean = clean.upper()
-        elif entity_type == "UPI":
-            clean = clean.lower()
-        return f"{entity_type}:{clean}"
+        return f"{entity_type}:{cls.canonicalize_token(entity_type, real_value)}"
 
     def get_or_create_surrogate(self, entity_type: str, real_value: str) -> str:
         """
@@ -100,10 +121,18 @@ class SessionVault:
 
     def get_real_value(self, surrogate_value: str) -> Optional[str]:
         """
-        Reverse-lookup: Retrieve original real value from surrogate.
+        Reverse-lookup: Retrieve original real value from surrogate (exact or canonical match).
         """
         entry = self._entries_by_surrogate.get(surrogate_value)
-        return entry.real_value if entry else None
+        if entry:
+            return entry.real_value
+
+        for candidate in self._entries_by_surrogate.values():
+            if self.canonicalize_token(candidate.entity_type, candidate.surrogate_value) == self.canonicalize_token(
+                candidate.entity_type, surrogate_value
+            ):
+                return candidate.real_value
+        return None
 
     def get_all_entries(self) -> List[VaultEntry]:
         """Return list of all registered mapping entries."""

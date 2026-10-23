@@ -120,6 +120,50 @@ class TestMaskingAndUnmasking(unittest.TestCase):
         self.assertEqual(len(matches), 0)
         self.assertEqual(self.unmasker.unmask(masked), neutral)
 
+    def test_resilient_unmasking_when_llm_reformats_surrogates(self):
+        """
+        Verifies that if an LLM drops spaces from an Aadhaar surrogate, strips '+91'
+        from a phone surrogate, or changes PAN casing, UnmaskingEngine still restores
+        the genuine identifiers.
+        """
+        prompt = "Verify Aadhaar 2679 0377 4206, mobile +91 98765 43210, and PAN BZRPK4321A."
+        _, vault, _ = mask_text(prompt, vault=self.vault)
+
+        surr_aadhaar = vault.get_or_create_surrogate("AADHAAR", "2679 0377 4206")
+        surr_phone = vault.get_or_create_surrogate("PHONE", "+91 98765 43210")
+        surr_pan = vault.get_or_create_surrogate("PAN", "BZRPK4321A")
+
+        compact_aadhaar = surr_aadhaar.replace(" ", "")
+        bare_phone = surr_phone.replace("+91 ", "").replace(" ", "")
+        lower_pan = surr_pan.lower()
+
+        llm_reformatted_reply = (
+            f"Aadhaar {compact_aadhaar} is linked to mobile {bare_phone} and pan {lower_pan}."
+        )
+        restored = unmask_text(llm_reformatted_reply, vault)
+
+        self.assertIn("2679 0377 4206", restored)
+        self.assertIn("+91 98765 43210", restored)
+        self.assertIn("BZRPK4321A", restored)
+        self.assertNotIn(compact_aadhaar, restored)
+        self.assertNotIn(bare_phone, restored)
+
+    def test_resilient_unmasking_partial_mask_last4(self):
+        """
+        Verifies that when an LLM partially masks a surrogate (e.g. 'XXXX XXXX 8603'),
+        the trailing 4 digits are restored to the real identifier's last 4 digits ('4206').
+        """
+        prompt = "Check KYC for Aadhaar 2679 0377 4206."
+        _, vault, _ = mask_text(prompt, vault=self.vault)
+
+        surr_aadhaar = vault.get_or_create_surrogate("AADHAAR", "2679 0377 4206")
+        surr_last4 = surr_aadhaar[-4:]
+
+        llm_partial_reply = f"Aadhaar XXXX XXXX {surr_last4} is verified."
+        restored = unmask_text(llm_partial_reply, vault)
+
+        self.assertEqual(restored, "Aadhaar XXXX XXXX 4206 is verified.")
+
 
 if __name__ == "__main__":
     unittest.main()
