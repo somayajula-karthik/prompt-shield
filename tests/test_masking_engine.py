@@ -164,6 +164,21 @@ class TestMaskingAndUnmasking(unittest.TestCase):
 
         self.assertEqual(restored, "Aadhaar XXXX XXXX 4206 is verified.")
 
+    def test_phone_linked_upi_surrogate_coherence(self):
+        """
+        Verifies that when a document contains both a phone number and a UPI ID
+        whose username is that same phone number (e.g. '9876543210' and '9876543210@paytm'),
+        the UPI surrogate reuses the phone surrogate's digits.
+        """
+        text = "Call 9876543210 or pay 9876543210@paytm."
+        masked, vault, _ = mask_text(text, vault=self.vault)
+
+        surr_phone = vault.get_or_create_surrogate("PHONE", "9876543210")
+        surr_upi = vault.get_or_create_surrogate("UPI", "9876543210@paytm")
+
+        self.assertEqual(surr_upi, f"{surr_phone}@paytm")
+        self.assertEqual(unmask_text(masked, vault), text)
+
 
 if __name__ == "__main__":
     unittest.main()

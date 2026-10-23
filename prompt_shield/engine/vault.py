@@ -99,11 +99,41 @@ class SessionVault:
             return entry.surrogate_value
 
         # Generate unique, format-valid surrogate
-        surrogate = self.generator.generate_surrogate(
-            entity_type=entity_type,
-            original_val=real_value,
-            existing_surrogates=self._active_surrogates,
-        )
+        if entity_type == "UPI" and "@" in real_value:
+            user_part, handle_part = real_value.split("@", 1)
+            user_digits = clean_digits(user_part)
+            # If the UPI username is a 10-digit Indian mobile number, link its surrogate
+            # to the corresponding PHONE surrogate so cross-entity coherence is preserved
+            if len(user_digits) == 10 and user_digits[0] in ("6", "7", "8", "9") and user_part.isdigit():
+                phone_surrogate = self.get_or_create_surrogate("PHONE", user_digits)
+                phone_surr_digits = self.canonicalize_token("PHONE", phone_surrogate)
+                handle_lower = handle_part.lower()
+                surr_handle = (
+                    handle_lower
+                    if handle_lower in self.generator.KNOWN_UPI_HANDLES
+                    else self.generator._rng.choice(self.generator.KNOWN_UPI_HANDLES)
+                )
+                candidate = f"{phone_surr_digits}@{surr_handle}"
+                if candidate != real_value and candidate not in self._active_surrogates:
+                    surrogate = candidate
+                else:
+                    surrogate = self.generator.generate_surrogate(
+                        entity_type=entity_type,
+                        original_val=real_value,
+                        existing_surrogates=self._active_surrogates,
+                    )
+            else:
+                surrogate = self.generator.generate_surrogate(
+                    entity_type=entity_type,
+                    original_val=real_value,
+                    existing_surrogates=self._active_surrogates,
+                )
+        else:
+            surrogate = self.generator.generate_surrogate(
+                entity_type=entity_type,
+                original_val=real_value,
+                existing_surrogates=self._active_surrogates,
+            )
 
         entry = VaultEntry(
             entity_type=entity_type,

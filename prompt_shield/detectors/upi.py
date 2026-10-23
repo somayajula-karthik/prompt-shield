@@ -15,7 +15,8 @@ class UPIDetector(BaseDetector):
     - Format: <username>@<handle>
     - Handles are associated with Indian banks or payment service providers (PSPs)
       such as @okhdfcbank, @oksbi, @okaxis, @okicici, @paytm, @ybl, @upi, etc.
-    - Accurately excludes email addresses (e.g. gmail.com, outlook.com).
+    - Accurately excludes email addresses (e.g. gmail.com, outlook.com) and system/SSH
+      host strings (e.g. deploy@buildserver, user@localhost).
     - Ignores surrounding sentence punctuation (. , ? ! :) so VPAs at sentence boundaries match cleanly.
     """
 
@@ -59,13 +60,26 @@ class UPIDetector(BaseDetector):
         "xyz", "ac.in", "edu.in", "gov.in", "co.in", "org.in",
     }
 
+    # System / DevOps hostnames to reject when dot-less
+    NON_PAYMENT_HOSTS: Set[str] = {
+        "localhost", "buildserver", "server", "staging", "production",
+        "prod", "devserver", "testserver", "ubuntu", "debian", "centos",
+        "docker", "k8s", "internal", "localdomain", "workstation", "host",
+    }
+
+    SSH_CONTEXT_PATTERN = re.compile(
+        r"\b(?:ssh|scp|sftp|rsync|git|ping|telnet|login)\b",
+        re.IGNORECASE,
+    )
+
     @property
     def entity_type(self) -> str:
         return "UPI"
 
     def is_valid_upi(self, username: str, handle: str) -> bool:
         """
-        Validates whether a username@handle pair is a UPI ID rather than an email address.
+        Validates whether a username@handle pair is a UPI ID rather than an email address
+        or system hostname.
         """
         handle_lower = handle.lower().strip()
 
@@ -73,16 +87,20 @@ class UPIDetector(BaseDetector):
         if handle_lower in self.KNOWN_UPI_HANDLES:
             return True
 
-        # 2. Check if it is a common email provider
+        # 2. Reject known non-payment system hostnames
+        if handle_lower in self.NON_PAYMENT_HOSTS:
+            return False
+
+        # 3. Check if it is a common email provider
         if handle_lower in self.COMMON_EMAIL_PROVIDERS:
             return False
 
-        # 3. Check if handle ends with a known web TLD (indicating an email address)
+        # 4. Check if handle ends with a known web TLD (indicating an email address)
         for tld in self.COMMON_TLDS:
             if handle_lower.endswith(f".{tld}") or handle_lower == tld:
                 return False
 
-        # 4. If handle has no dots and is alphanumeric, it's very likely a custom bank PSP handle
+        # 5. If handle has no dots and is alphanumeric, accept as custom bank PSP handle
         if "." not in handle_lower and len(handle_lower) >= 2:
             return True
 
@@ -98,20 +116,30 @@ class UPIDetector(BaseDetector):
             handle = match.group(2)
             raw_vpa = match.group(0)
 
-            if self.is_valid_upi(username, handle):
-                matches.append(
-                    Match(
-                        entity_type=self.entity_type,
-                        start=match.start(),
-                        end=match.end(),
-                        value=raw_vpa,
-                        confidence=0.98 if handle.lower() in self.KNOWN_UPI_HANDLES else 0.85,
-                        metadata={
-                            "username": username,
-                            "handle": handle.lower(),
-                            "is_known_handle": handle.lower() in self.KNOWN_UPI_HANDLES,
-                        },
-                    )
+            if not self.is_valid_upi(username, handle):
+                continue
+
+            # If handle is not in KNOWN_UPI_HANDLES, reject when preceded by SSH/shell context
+            handle_lower = handle.lower()
+            if handle_lower not in self.KNOWN_UPI_HANDLES:
+                window_start = max(0, match.start() - 30)
+                preceding = text[window_start : match.start()]
+                if self.SSH_CONTEXT_PATTERN.search(preceding):
+                    continue
+
+            matches.append(
+                Match(
+                    entity_type=self.entity_type,
+                    start=match.start(),
+                    end=match.end(),
+                    value=raw_vpa,
+                    confidence=0.98 if handle_lower in self.KNOWN_UPI_HANDLES else 0.85,
+                    metadata={
+                        "username": username,
+                        "handle": handle_lower,
+                        "is_known_handle": handle_lower in self.KNOWN_UPI_HANDLES,
+                    },
                 )
+            )
 
         return matches

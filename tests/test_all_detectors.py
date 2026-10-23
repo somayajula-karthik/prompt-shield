@@ -127,6 +127,19 @@ class TestAllDetectors(unittest.TestCase):
         for m in matches:
             self.assertEqual(text[m.start : m.end], m.value)
 
+    def test_context_aware_lookalike_rejection(self):
+        # 10-digit order IDs, account numbers, and currency amounts should not match PHONE
+        self.assertEqual(len(detect_all("Order ID 9123456780 has shipped.")), 0)
+        self.assertEqual(len(detect_all("Savings account number 7012345678 at the branch.")), 0)
+        self.assertEqual(len(detect_all("Invoice total Rs 8000000001 is a typo in the ledger.")), 0)
+
+        # 12-digit UTR number that happens to pass Verhoeff should not match AADHAAR
+        self.assertEqual(len(detect_all("UTR reference 810033076661 for NEFT transfer.")), 0)
+
+        # System/SSH host strings should not match UPI
+        self.assertEqual(len(detect_all("SSH into deploy@buildserver tonight.")), 0)
+        self.assertEqual(len(detect_all("Ping me as karthik@localhost for the test mail.")), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
