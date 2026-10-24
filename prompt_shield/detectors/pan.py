@@ -20,9 +20,13 @@ class PANDetector(BaseDetector):
     - Digits 6-9 range between 0001 and 9999 (0000 is invalid)
     """
 
-    # Boundaries ensure PAN is not a substring of a longer alphanumeric hash or code
+    # Boundaries ensure PAN is not a substring of a longer alphanumeric hash or code.
+    # Supports contiguous 10-char PANs, block-separated PANs (BZRPK 4321 A), and OCR char-spaced PANs.
     PAN_PATTERN = re.compile(
-        r"(?<![A-Za-z0-9])([A-Za-z]{5}[0-9]{4}[A-Za-z])(?![A-Za-z0-9])"
+        r"(?<![A-Za-z0-9])("
+        r"[A-Za-z]{5}[ -]?[0-9]{4}[ -]?[A-Za-z]"
+        r"|(?:[A-Za-z][ ]){4}[A-Za-z][ ](?:[0-9][ ]){3}[0-9][ ][A-Za-z]"
+        r")(?![A-Za-z0-9])"
     )
 
     VALID_STATUS_CHARS: Set[str] = {
@@ -37,7 +41,7 @@ class PANDetector(BaseDetector):
         """
         Validates structural rules of an Indian PAN card.
         """
-        normalized = pan_candidate.upper().strip()
+        normalized = re.sub(r"[\s-]+", "", pan_candidate).upper()
         if len(normalized) != 10:
             return False
 
@@ -60,7 +64,7 @@ class PANDetector(BaseDetector):
 
         for match in self.PAN_PATTERN.finditer(text):
             raw_val = match.group(1)
-            normalized = raw_val.upper()
+            normalized = re.sub(r"[\s-]+", "", raw_val).upper()
 
             if self.validate_pan(normalized):
                 status_code = normalized[3]

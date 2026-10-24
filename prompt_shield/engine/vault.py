@@ -77,7 +77,7 @@ class SessionVault:
                 return digits[1:]
             return digits
         if entity_type in ("PAN", "IFSC"):
-            return raw.upper()
+            return "".join(ch for ch in raw.upper() if ch.isalnum())
         if entity_type == "UPI":
             return raw.lower()
         return raw

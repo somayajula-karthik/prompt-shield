@@ -55,10 +55,12 @@ class SurrogateGenerator:
         chk = compute_verhoeff_checksum(base_11)
         full_12 = f"{base_11}{chk}"
 
-        if " " in original_val:
+        if " " in original_val or "\n" in original_val:
             return f"{full_12[:4]} {full_12[4:8]} {full_12[8:]}"
         elif "-" in original_val:
             return f"{full_12[:4]}-{full_12[4:8]}-{full_12[8:]}"
+        elif "." in original_val:
+            return f"{full_12[:4]}.{full_12[4:8]}.{full_12[8:]}"
         return full_12
 
     def generate_pan(self, original_val: str) -> str:
@@ -68,7 +70,7 @@ class SurrogateGenerator:
         - 4th character (holder type: 'P' for Individual, 'C' for Company, etc.)
         - Casing (uppercase/lowercase)
         """
-        norm = original_val.strip().upper()
+        norm = "".join(ch for ch in original_val.upper() if ch.isalnum())
         # Preserve status char (index 3), default to 'P' if not present
         status_char = norm[3] if len(norm) > 3 and norm[3] in "PCHFATBLJG" else "P"
 

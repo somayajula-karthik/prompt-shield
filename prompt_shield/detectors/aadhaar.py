@@ -22,9 +22,9 @@ class AadhaarDetector(BaseDetector):
       collide with the 1-in-10 Verhoeff check digit space.
     """
 
-    # Matches formatted (XXXX XXXX XXXX or XXXX-XXXX-XXXX) or unformatted (XXXXXXXXXXXX)
+    # Matches formatted (spaces, hyphens, dots, or line-wrapped 4-digit blocks) or unformatted (12 digits)
     AADHAAR_PATTERN = re.compile(
-        r"(?<!\d)([2-9]\d{3}[ -]\d{4}[ -]\d{4}|[2-9]\d{11})(?!\d)"
+        r"(?<!\d)([2-9]\d{3}(?:[\s.-]{1,3}\d{4}){2}|[2-9]\d{11})(?!\d)"
     )
 
     NEGATIVE_CONTEXT_PATTERN = re.compile(
@@ -47,7 +47,7 @@ class AadhaarDetector(BaseDetector):
         suppress unformatted 12-digit matches when preceded by explicit transaction/UTR labels
         unless an Aadhaar/UID keyword is also present.
         """
-        is_formatted = " " in raw_val or "-" in raw_val
+        is_formatted = any(ch in raw_val for ch in (" ", "-", ".", "\n", "\t"))
         if is_formatted:
             return False
 

@@ -140,6 +140,35 @@ class TestAllDetectors(unittest.TestCase):
         self.assertEqual(len(detect_all("SSH into deploy@buildserver tonight.")), 0)
         self.assertEqual(len(detect_all("Ping me as karthik@localhost for the test mail.")), 0)
 
+    def test_ocr_and_pdf_whitespace_tolerant_detection(self):
+        # OCR dot-separated, double-spaced, and line-wrapped Aadhaar numbers
+        m_dot = detect_all("Aadhaar: 2679.0377.4206")
+        self.assertEqual(len(m_dot), 1)
+        self.assertEqual(m_dot[0].entity_type, "AADHAAR")
+        self.assertEqual(m_dot[0].value, "2679.0377.4206")
+
+        m_wrap = detect_all("Aadhaar: 2679 0377\n4206")
+        self.assertEqual(len(m_wrap), 1)
+        self.assertEqual(m_wrap[0].entity_type, "AADHAAR")
+        self.assertEqual(m_wrap[0].value, "2679 0377\n4206")
+
+        # PDF block-spaced and character-spaced PAN cards
+        m_pan_block = detect_all("PAN: BZRPK 4321 A")
+        self.assertEqual(len(m_pan_block), 1)
+        self.assertEqual(m_pan_block[0].entity_type, "PAN")
+        self.assertEqual(m_pan_block[0].metadata["normalized"], "BZRPK4321A")
+
+        m_pan_char = detect_all("PAN: B Z R P K 4 3 2 1 A")
+        self.assertEqual(len(m_pan_char), 1)
+        self.assertEqual(m_pan_char[0].entity_type, "PAN")
+        self.assertEqual(m_pan_char[0].metadata["normalized"], "BZRPK4321A")
+
+        # Double-spaced and dot-separated mobile numbers
+        m_phone = detect_all("Mobile: +91 98765  43210")
+        self.assertEqual(len(m_phone), 1)
+        self.assertEqual(m_phone[0].entity_type, "PHONE")
+        self.assertEqual(m_phone[0].value, "+91 98765  43210")
+
 
 if __name__ == "__main__":
     unittest.main()
