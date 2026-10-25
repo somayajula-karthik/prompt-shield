@@ -74,7 +74,7 @@ prompt_shield/
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/prompt-shield.git
+git clone https://github.com/somayajula-karthik/prompt-shield.git
 cd prompt-shield
 
 # (Optional) Install development dependencies

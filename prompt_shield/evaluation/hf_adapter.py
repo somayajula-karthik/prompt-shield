@@ -281,6 +281,54 @@ def build_hf_ai4privacy_indian_corpus() -> List[dict]:
     return [_compile_hf_template(uid, domain, tpl) for uid, domain, tpl in raw_specs]
 
 
+def from_indic_synthetic_profile_row(row: dict, index: int = 0) -> EvalSample:
+    """
+    Converts a profile row from the Hugging Face dataset
+    `adwaith06/indic-synthetic-profiles` (`data/hf_indic_synthetic_profiles.json`)
+    into a realistic multi-script KYC/payroll prompt with exact character-span
+    ground-truth annotations for all 5 Indian identifiers, while embedding
+    the row's native Indic script (`name_native`), email, 12-digit bank account
+    number, salary, and pincode as realistic in-prompt distractors.
+    """
+    lang = str(row.get("language", "in"))
+    sample_id = f"hf_indic_profile_{index + 1:03d}_{lang}"
+
+    name = str(row.get("name", ""))
+    name_native = str(row.get("name_native", ""))
+    dob = str(row.get("dob", ""))
+    employer = str(row.get("employer", ""))
+    job_title = str(row.get("job_title", ""))
+    salary = str(row.get("salary", ""))
+    email = str(row.get("email", ""))
+    city = str(row.get("city", ""))
+    state = str(row.get("state", ""))
+    pincode = str(row.get("pincode", ""))
+    bank_name = str(row.get("bank_account_bank", ""))
+    bank_acc = str(row.get("bank_account_account", ""))
+
+    aadhaar_val = str(row["aadhaar"])
+    pan_val = str(row["pan"])
+    phone_val = str(row["phone"])
+    ifsc_val = str(row["bank_account_ifsc"])
+    upi_val = str(row["upi_id"])
+
+    template = (
+        f"Applicant Profile ({lang.upper()}): {name} ({name_native}), DOB {dob}, "
+        f"{job_title} at {employer} (Salary {salary}), residing in {city}, {state} - {pincode}. "
+        f"Contact Email: {email}, Mobile: {{{{IN_PHONE::{phone_val}}}}}. "
+        f"KYC Identifiers — Aadhaar: {{{{IN_AADHAAR::{aadhaar_val}}}}}, PAN: {{{{IN_PAN::{pan_val}}}}}. "
+        f"Banking Details — {bank_name} Savings Account number {bank_acc}, "
+        f"Branch IFSC: {{{{IN_IFSC::{ifsc_val}}}}}, Linked UPI VPA: {{{{IN_UPI::{upi_val}}}}}."
+    )
+
+    compiled = _compile_hf_template(
+        uid=sample_id,
+        domain=f"hf_indic_profile_{lang}",
+        template=template,
+    )
+    return from_hf_ai4privacy_record(compiled, index=index)
+
+
 def save_hf_corpus(filepath: str = "data/hf_ai4privacy_indian_eval.json") -> List[dict]:
     records = build_hf_ai4privacy_indian_corpus()
     path = Path(filepath)

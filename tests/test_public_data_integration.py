@@ -7,6 +7,7 @@ import json
 import unittest
 from pathlib import Path
 from prompt_shield.detectors import IFSCDetector, UPIDetector
+from prompt_shield.engine import SurrogateGenerator, mask_text, unmask_text
 from prompt_shield.evaluation import (
     load_evaluation_dataset,
     validate_dataset,
@@ -65,6 +66,43 @@ class TestPublicDataIntegration(unittest.TestCase):
         self.assertEqual(report.overall.precision, 1.0)
         self.assertEqual(report.overall.recall, 1.0)
         self.assertEqual(report.overall.f1, 1.0)
+
+    def test_hf_indic_synthetic_profiles_evaluation_and_multilingual_roundtrip(self):
+        """
+        Evaluates Prompt Shield on 100 real profile records downloaded from the
+        Hugging Face dataset `adwaith06/indic-synthetic-profiles` (500 entities
+        across 8 Indian languages + 100 12-digit bank accounts + 100 emails).
+        """
+        profiles_path = "data/hf_indic_synthetic_profiles.json"
+        self.assertTrue(Path(profiles_path).exists())
+
+        samples = load_evaluation_dataset(profiles_path)
+        self.assertEqual(len(samples), 100)
+
+        is_valid, errors = validate_dataset(samples)
+        self.assertTrue(is_valid, f"HF indic-synthetic-profiles validation errors: {errors}")
+
+        report = evaluate_dataset(samples, strict_span=True)
+        self.assertEqual(report.total_samples, 100)
+        self.assertEqual(report.overall.tp, 500)
+        self.assertEqual(report.overall.fp, 0)
+        self.assertEqual(report.overall.fn, 0)
+        self.assertEqual(report.overall.precision, 1.0)
+        self.assertEqual(report.overall.recall, 1.0)
+        self.assertEqual(report.overall.f1, 1.0)
+
+        # Verify multi-script (Kannada, Hindi, Tamil, Telugu, etc.) round-trip fidelity
+        for sample in samples[:15]:
+            masked, vault, matches = mask_text(sample.text)
+            self.assertEqual(len(matches), 5)
+            restored = unmask_text(masked, vault)
+            self.assertEqual(restored, sample.text)
+
+    def test_hf_indic_profile_origin_matched_name_surrogacy(self):
+        gen = SurrogateGenerator(seed=42)
+        surr_kn = gen.generate_person_name("Sathish Shivaprasad", language="kn")
+        self.assertNotEqual(surr_kn, "Sathish Shivaprasad")
+        self.assertTrue(len(surr_kn) > 0)
 
 
 if __name__ == "__main__":

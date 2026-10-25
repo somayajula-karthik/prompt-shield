@@ -1,6 +1,6 @@
 # Prompt Shield — Technical Note (P1, Qualification Sprint)
 
-**Author:** Karthik Somayajula · **Repository:** github.com/somayajula-karthik/prompt-shield
+**Author:** Somayajula Karthik · **Repository:** github.com/somayajula-karthik/prompt-shield
 
 ## 1. Problem
 

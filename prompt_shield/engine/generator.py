@@ -9,10 +9,39 @@ Generates realistic, format-preserving surrogates that pass strict validation:
 - Phone: Valid 10-digit Indian mobile number with matching prefix/delimiters.
 """
 
+import json
 import random
 import string
-from typing import Optional, Set
+from pathlib import Path
+from typing import Dict, List, Optional, Set, Tuple
 from prompt_shield.algorithms.verhoeff import generate_valid_aadhaar, clean_digits
+
+
+def _load_hf_indic_profiles() -> Tuple[List[str], Dict[str, List[str]]]:
+    """
+    Loads synthetic Indian names grouped by language/origin from the
+    Hugging Face dataset `adwaith06/indic-synthetic-profiles`
+    (stored locally at `data/hf_indic_synthetic_profiles.json`).
+    """
+    profiles_path = Path(__file__).resolve().parents[2] / "data" / "hf_indic_synthetic_profiles.json"
+    all_names: List[str] = []
+    by_lang: Dict[str, List[str]] = {}
+    if profiles_path.exists():
+        try:
+            with open(profiles_path, "r", encoding="utf-8") as f:
+                payload = json.load(f)
+            for row in payload.get("profiles", []):
+                name = str(row.get("name", "")).strip()
+                lang = str(row.get("language", "hi")).strip().lower()
+                if name:
+                    all_names.append(name)
+                    by_lang.setdefault(lang, []).append(name)
+        except Exception:
+            pass
+    return all_names, by_lang
+
+
+HF_INDIC_NAMES, HF_INDIC_NAMES_BY_LANG = _load_hf_indic_profiles()
 
 
 class SurrogateGenerator:
@@ -144,6 +173,29 @@ class SurrogateGenerator:
         elif "-" in original_val:
             return f"{core_10[:5]}-{core_10[5:]}"
         return core_10
+
+    def generate_person_name(self, original_name: str, language: Optional[str] = None) -> str:
+        """
+        Generates a culturally and regionally matched Indian surrogate name of similar
+        length using the Hugging Face `adwaith06/indic-synthetic-profiles` pool.
+        """
+        pool = (
+            HF_INDIC_NAMES_BY_LANG.get(language.lower(), [])
+            if language
+            else HF_INDIC_NAMES
+        ) or HF_INDIC_NAMES
+
+        if pool:
+            target_len = len(original_name.strip())
+            candidates = [n for n in pool if n.lower() != original_name.strip().lower()]
+            if candidates:
+                candidates.sort(key=lambda n: abs(len(n) - target_len))
+                top_k = candidates[: max(1, min(10, len(candidates)))]
+                return self._rng.choice(top_k)
+
+        first = self._rng.choice(self.COMMON_FIRST_NAMES).capitalize()
+        last = self._rng.choice(self.COMMON_LAST_NAMES).capitalize()
+        return f"{first} {last}"
 
     def generate_surrogate(
         self,

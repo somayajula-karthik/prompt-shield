@@ -63,15 +63,27 @@ def load_evaluation_dataset(filepath: str) -> List[EvalSample]:
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    if not isinstance(data, list):
-        raise ValueError("Evaluation dataset JSON must contain an array of sample objects.")
+    from prompt_shield.evaluation.hf_adapter import (
+        from_hf_ai4privacy_record,
+        from_indic_synthetic_profile_row,
+    )
 
-    from prompt_shield.evaluation.hf_adapter import from_hf_ai4privacy_record
+    if isinstance(data, dict) and "profiles" in data:
+        profiles = data["profiles"]
+        return [
+            from_indic_synthetic_profile_row(row, index=idx)
+            for idx, row in enumerate(profiles)
+        ]
+
+    if not isinstance(data, list):
+        raise ValueError("Evaluation dataset JSON must contain an array of sample objects or a Hugging Face profiles payload.")
 
     samples: List[EvalSample] = []
     for idx, item in enumerate(data):
         if "source_text" in item or "privacy_mask" in item:
             samples.append(from_hf_ai4privacy_record(item, index=idx))
+        elif "aadhaar" in item and "pan" in item and "bank_account_ifsc" in item:
+            samples.append(from_indic_synthetic_profile_row(item, index=idx))
         else:
             samples.append(EvalSample.from_dict(item))
     return samples
