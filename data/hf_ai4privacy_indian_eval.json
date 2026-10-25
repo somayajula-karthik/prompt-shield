@@ -1,0 +1,563 @@
+[
+  {
+    "uid": "hf_ind_01",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "banking_kyc",
+    "source_text": "User: Please summarize this KYC note for IDFC FIRST branch IDFB0040101: customer UID 2679 0377 4206, Tax ID BZRPK4321A, and CRED Autopay VPA vikram.rao@tapicici.",
+    "privacy_mask": [
+      {
+        "label": "IN_IFSC",
+        "start": 59,
+        "end": 70,
+        "value": "IDFB0040101"
+      },
+      {
+        "label": "IN_AADHAAR",
+        "start": 85,
+        "end": 99,
+        "value": "2679 0377 4206"
+      },
+      {
+        "label": "TAXNUM",
+        "start": 108,
+        "end": 118,
+        "value": "BZRPK4321A"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 141,
+        "end": 160,
+        "value": "vikram.rao@tapicici"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_02",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "ocr_scanned_pdf",
+    "source_text": "Extracted OCR from scanned PAN & Aadhaar card:\nUIDAI No: 4415.9206.6111\nPermanent Account No: A F K P R 8 9 1 2 K\nRegistered Cell: +91 98765  43210",
+    "privacy_mask": [
+      {
+        "label": "IN_AADHAAR",
+        "start": 57,
+        "end": 71,
+        "value": "4415.9206.6111"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 94,
+        "end": 113,
+        "value": "A F K P R 8 9 1 2 K"
+      },
+      {
+        "label": "PHONENUMBER",
+        "start": 131,
+        "end": 147,
+        "value": "+91 98765  43210"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_03",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "ocr_scanned_pdf",
+    "source_text": "PDF Table Row 4: Applicant Aadhaar 2679 0377\n4206 | Block-spaced PAN BZRPK 4321 A | Federal Bank IFSC FDRL0001422.",
+    "privacy_mask": [
+      {
+        "label": "IN_AADHAAR",
+        "start": 35,
+        "end": 49,
+        "value": "2679 0377\n4206"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 69,
+        "end": 81,
+        "value": "BZRPK 4321 A"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 102,
+        "end": 113,
+        "value": "FDRL0001422"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_04",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "upi_fintech",
+    "source_text": "Reconcile UPI settlements across Paytm merchant.hyd@ptsbi, Jupiter arjun.m@jupiteraxis, and MobiKwik suresh88@ikwik.",
+    "privacy_mask": [
+      {
+        "label": "IN_UPI",
+        "start": 39,
+        "end": 57,
+        "value": "merchant.hyd@ptsbi"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 67,
+        "end": 86,
+        "value": "arjun.m@jupiteraxis"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 101,
+        "end": 115,
+        "value": "suresh88@ikwik"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_05",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "healthcare_ehr",
+    "source_text": "Discharge Summary — Patient Aadhaar 690934066215, Emergency Contact 091234 56789, TPA Firm PAN AAACF4321D, Refund Bank AUBL0002011.",
+    "privacy_mask": [
+      {
+        "label": "AADHAAR_NUMBER",
+        "start": 36,
+        "end": 48,
+        "value": "690934066215"
+      },
+      {
+        "label": "TELEPHONENUM",
+        "start": 68,
+        "end": 80,
+        "value": "091234 56789"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 95,
+        "end": 105,
+        "value": "AAACF4321D"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 119,
+        "end": 130,
+        "value": "AUBL0002011"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_06",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "tax_audit",
+    "source_text": "Compare Section 80C deductions for HUF assessee BZRHK5511E and Trust assessee AABTT2299F holding account at Bandhan Bank BDBL0001599.",
+    "privacy_mask": [
+      {
+        "label": "TAXNUM",
+        "start": 48,
+        "end": 58,
+        "value": "BZRHK5511E"
+      },
+      {
+        "label": "TAXNUM",
+        "start": 78,
+        "end": 88,
+        "value": "AABTT2299F"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 121,
+        "end": 132,
+        "value": "BDBL0001599"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_07",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "multi_turn_chat",
+    "source_text": "Turn 1: Check loan eligibility for mobile 9876543210 and Paytm VPA 9876543210@paytm.\nTurn 2: Also link Saraswat Co-op Bank IFSC SRCB0000123.",
+    "privacy_mask": [
+      {
+        "label": "PHONENUMBER",
+        "start": 42,
+        "end": 52,
+        "value": "9876543210"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 67,
+        "end": 83,
+        "value": "9876543210@paytm"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 128,
+        "end": 139,
+        "value": "SRCB0000123"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_08",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "payroll_compliance",
+    "source_text": "Form 16 Part B: Employee PAN ghppk1122m, Aadhaar 5857-0839-3474, Salary Credited to Karnataka Bank KARB0000210.",
+    "privacy_mask": [
+      {
+        "label": "IN_PAN",
+        "start": 29,
+        "end": 39,
+        "value": "ghppk1122m"
+      },
+      {
+        "label": "IN_AADHAAR",
+        "start": 49,
+        "end": 63,
+        "value": "5857-0839-3474"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 99,
+        "end": 110,
+        "value": "KARB0000210"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_09",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "ecommerce_refund",
+    "source_text": "Customer requested instant refund of Rs 2,499 to Navi UPI neha.sharma@naviaxis or callback on +91-87654-32109.",
+    "privacy_mask": [
+      {
+        "label": "IN_UPI",
+        "start": 58,
+        "end": 78,
+        "value": "neha.sharma@naviaxis"
+      },
+      {
+        "label": "PHONENUMBER",
+        "start": 94,
+        "end": 109,
+        "value": "+91-87654-32109"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_10",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "rural_banking",
+    "source_text": "PM-KISAN beneficiary verification: Telangana Grameena Bank IFSC TGBI0000412, Aadhaar 5016 6131 8603, Mobile 78901 23456.",
+    "privacy_mask": [
+      {
+        "label": "IN_IFSC",
+        "start": 64,
+        "end": 75,
+        "value": "TGBI0000412"
+      },
+      {
+        "label": "IN_AADHAAR",
+        "start": 85,
+        "end": 99,
+        "value": "5016 6131 8603"
+      },
+      {
+        "label": "PHONENUMBER",
+        "start": 108,
+        "end": 119,
+        "value": "78901 23456"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_11",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "corporate_vendor",
+    "source_text": "Vendor onboarding for Company PAN AAACB1234C, Local Authority PAN AAJLM9988B, and India Post Payments Bank IFSC IPOS0000001.",
+    "privacy_mask": [
+      {
+        "label": "IN_PAN",
+        "start": 34,
+        "end": 44,
+        "value": "AAACB1234C"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 66,
+        "end": 76,
+        "value": "AAJLM9988B"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 112,
+        "end": 123,
+        "value": "IPOS0000001"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_12",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "insurance_claim",
+    "source_text": "Motor claim settlement: Policyholder UID 4952 8926 4966, Equitas Small Finance Bank ESFB0009001, WhatsApp Pay claimant@wahdfc.",
+    "privacy_mask": [
+      {
+        "label": "IN_AADHAAR",
+        "start": 41,
+        "end": 55,
+        "value": "4952 8926 4966"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 84,
+        "end": 95,
+        "value": "ESFB0009001"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 110,
+        "end": 125,
+        "value": "claimant@wahdfc"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_13",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "legal_affidavit",
+    "source_text": "Deponent Aadhaar 4914 1777 6311 and PAN DFRPP7744B verified before notary; contact number +91 70123 45678.",
+    "privacy_mask": [
+      {
+        "label": "IN_AADHAAR",
+        "start": 17,
+        "end": 31,
+        "value": "4914 1777 6311"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 40,
+        "end": 50,
+        "value": "DFRPP7744B"
+      },
+      {
+        "label": "PHONENUMBER",
+        "start": 90,
+        "end": 105,
+        "value": "+91 70123 45678"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_14",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "wealth_management",
+    "source_text": "CAMS consolidated statement for Folio linked to PAN KLMPP3456Q, mobile 9988776655, and Standard Chartered IFSC SCBL0036001.",
+    "privacy_mask": [
+      {
+        "label": "IN_PAN",
+        "start": 52,
+        "end": 62,
+        "value": "KLMPP3456Q"
+      },
+      {
+        "label": "PHONENUMBER",
+        "start": 71,
+        "end": 81,
+        "value": "9988776655"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 111,
+        "end": 122,
+        "value": "SCBL0036001"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_15",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "education_scholarship",
+    "source_text": "National Scholarship Portal DBT record: Student Aadhaar 9319 1675 1719, Ujjivan Bank IFSC UJVN0001122, FamPay VPA rohit19@fam.",
+    "privacy_mask": [
+      {
+        "label": "IN_AADHAAR",
+        "start": 56,
+        "end": 70,
+        "value": "9319 1675 1719"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 90,
+        "end": 101,
+        "value": "UJVN0001122"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 114,
+        "end": 125,
+        "value": "rohit19@fam"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_16",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "telecom_kyc",
+    "source_text": "e-KYC SIM activation for subscriber +91 63012 34567 with Aadhaar 2336 5020 2122 and Airtel Payments Bank sub6301@airtel.",
+    "privacy_mask": [
+      {
+        "label": "PHONENUMBER",
+        "start": 36,
+        "end": 51,
+        "value": "+91 63012 34567"
+      },
+      {
+        "label": "IN_AADHAAR",
+        "start": 65,
+        "end": 79,
+        "value": "2336 5020 2122"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 105,
+        "end": 119,
+        "value": "sub6301@airtel"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_17",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "real_estate_tds",
+    "source_text": "Form 26QB property TDS challan: Buyer PAN PQRPT6789L, Seller PAN UVWPY1234Z, Remitter Bank IFSC COSB0000012.",
+    "privacy_mask": [
+      {
+        "label": "IN_PAN",
+        "start": 42,
+        "end": 52,
+        "value": "PQRPT6789L"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 65,
+        "end": 75,
+        "value": "UVWPY1234Z"
+      },
+      {
+        "label": "IN_IFSC",
+        "start": 96,
+        "end": 107,
+        "value": "COSB0000012"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_18",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "microfinance",
+    "source_text": "SHG loan ledger: Utkarsh Small Finance Bank UTKS0001050, Group Leader Aadhaar 2679 0377 4206, Contact 81234 56789.",
+    "privacy_mask": [
+      {
+        "label": "IN_IFSC",
+        "start": 44,
+        "end": 55,
+        "value": "UTKS0001050"
+      },
+      {
+        "label": "IN_AADHAAR",
+        "start": 78,
+        "end": 92,
+        "value": "2679 0377 4206"
+      },
+      {
+        "label": "PHONENUMBER",
+        "start": 102,
+        "end": 113,
+        "value": "81234 56789"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_19",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "upi_mandate",
+    "source_text": "Recurring IPO ASBA mandate via Slice investor.hyd@slice and Amazon Pay primeuser@rapl linked to PAN MNBPC4321P.",
+    "privacy_mask": [
+      {
+        "label": "IN_UPI",
+        "start": 37,
+        "end": 55,
+        "value": "investor.hyd@slice"
+      },
+      {
+        "label": "IN_UPI",
+        "start": 71,
+        "end": 85,
+        "value": "primeuser@rapl"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 100,
+        "end": 110,
+        "value": "MNBPC4321P"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_20",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "nri_remittance",
+    "source_text": "NRO account tax certificate: DBS Bank India DBSS0IN0811, Depositor PAN ZXCPP9876K, Indian contact +91 94401 23456.",
+    "privacy_mask": [
+      {
+        "label": "IN_IFSC",
+        "start": 44,
+        "end": 55,
+        "value": "DBSS0IN0811"
+      },
+      {
+        "label": "IN_PAN",
+        "start": 71,
+        "end": 81,
+        "value": "ZXCPP9876K"
+      },
+      {
+        "label": "PHONENUMBER",
+        "start": 98,
+        "end": 113,
+        "value": "+91 94401 23456"
+      }
+    ]
+  },
+  {
+    "uid": "hf_ind_21",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "distractor_lookalike",
+    "source_text": "Order ID 9123456780 and NEFT UTR reference 810033076661 were billed for Rs 8000000001 on savings account number 7012345678.",
+    "privacy_mask": []
+  },
+  {
+    "uid": "hf_ind_22",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "distractor_devops",
+    "source_text": "SSH into deploy@buildserver or ping karthik@localhost after pushing commit 7f8a9aabcp1234c99e12 to staging.",
+    "privacy_mask": []
+  },
+  {
+    "uid": "hf_ind_23",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "distractor_invalid_checksum",
+    "source_text": "Rejected KYC test vectors: mutated Aadhaar 2679 0377 4207, invalid PAN ABCXE1234F, and malformed IFSC SBIN1001234.",
+    "privacy_mask": []
+  },
+  {
+    "uid": "hf_ind_24",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "distractor_emails_and_cards",
+    "source_text": "Email billing@hdfcbank.com or support@osmania.ac.in regarding 16-digit card 9876543210123456.",
+    "privacy_mask": []
+  },
+  {
+    "uid": "hf_ind_25",
+    "dataset_schema": "ai4privacy/pii-masking-indian-synthetic",
+    "domain": "distractor_clinical_vitals",
+    "source_text": "Patient BP 120/80 mmHg, HbA1c 6.4%, fasting glucose 142 mg/dL, and dummy test line 9999999999.",
+    "privacy_mask": []
+  }
+]

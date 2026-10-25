@@ -2,9 +2,26 @@
 IFSC (Indian Financial System Code) detector.
 """
 
+import json
 import re
-from typing import List, Set
+from pathlib import Path
+from typing import Dict, List, Set
 from prompt_shield.detectors.base import BaseDetector, Match
+
+
+def _load_rbi_bank_registry() -> Dict[str, Dict[str, str]]:
+    registry_path = Path(__file__).resolve().parents[2] / "data" / "public_registries.json"
+    if registry_path.exists():
+        try:
+            with open(registry_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data.get("rbi_ifsc_banks", {})
+        except Exception:
+            pass
+    return {}
+
+
+RBI_BANK_REGISTRY: Dict[str, Dict[str, str]] = _load_rbi_bank_registry()
 
 
 class IFSCDetector(BaseDetector):
@@ -23,14 +40,14 @@ class IFSCDetector(BaseDetector):
         r"(?<![A-Za-z0-9])([A-Za-z]{4}0[A-Za-z0-9]{6})(?![A-Za-z0-9])"
     )
 
-    # Major Indian Bank 4-letter IFSC prefixes
+    # Major Indian Bank 4-letter IFSC prefixes (merged with RBI public registry)
     KNOWN_BANK_PREFIXES: Set[str] = {
         "SBIN", "HDFC", "ICIC", "UTIB", "KKBK", "PUNB", "BARB",
         "CNRB", "UBIN", "BKID", "IOBA", "IDIB", "CBIN", "IDFB",
         "YESB", "INDB", "MAHB", "PSIB", "UCOB", "FDRL", "SIBL",
         "KVBL", "RBLN", "AUBL", "ESFB", "JSFB", "UTKS", "PYTM",
         "AIRP", "IPOS", "SCBL", "HSBC", "CITI", "DBSS",
-    }
+    } | set(RBI_BANK_REGISTRY.keys())
 
     @property
     def entity_type(self) -> str:
@@ -75,6 +92,7 @@ class IFSCDetector(BaseDetector):
             if self.validate_ifsc(normalized):
                 bank_prefix = normalized[:4]
                 is_known = bank_prefix in self.KNOWN_BANK_PREFIXES
+                bank_info = RBI_BANK_REGISTRY.get(bank_prefix, {})
                 matches.append(
                     Match(
                         entity_type=self.entity_type,
@@ -85,6 +103,7 @@ class IFSCDetector(BaseDetector):
                         metadata={
                             "normalized": normalized,
                             "bank_prefix": bank_prefix,
+                            "bank_name": bank_info.get("bank_name", "Unknown Scheduled Bank"),
                             "branch_code": normalized[5:],
                             "is_known_bank": is_known,
                         },

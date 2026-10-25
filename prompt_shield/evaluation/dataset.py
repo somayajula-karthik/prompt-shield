@@ -50,7 +50,12 @@ class EvalSample:
 
 
 def load_evaluation_dataset(filepath: str) -> List[EvalSample]:
-    """Load evaluation samples from a JSON dataset file."""
+    """
+    Load evaluation samples from a JSON dataset file.
+    Automatically detects and converts both native Prompt Shield datasets
+    (`text` + `entities`) and Hugging Face ai4privacy-format datasets
+    (`source_text` + `privacy_mask`).
+    """
     path = Path(filepath)
     if not path.exists():
         raise FileNotFoundError(f"Evaluation dataset not found at: {filepath}")
@@ -61,7 +66,15 @@ def load_evaluation_dataset(filepath: str) -> List[EvalSample]:
     if not isinstance(data, list):
         raise ValueError("Evaluation dataset JSON must contain an array of sample objects.")
 
-    return [EvalSample.from_dict(item) for item in data]
+    from prompt_shield.evaluation.hf_adapter import from_hf_ai4privacy_record
+
+    samples: List[EvalSample] = []
+    for idx, item in enumerate(data):
+        if "source_text" in item or "privacy_mask" in item:
+            samples.append(from_hf_ai4privacy_record(item, index=idx))
+        else:
+            samples.append(EvalSample.from_dict(item))
+    return samples
 
 
 def validate_dataset(samples: List[EvalSample]) -> Tuple[bool, List[str]]:

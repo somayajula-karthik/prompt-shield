@@ -10,6 +10,12 @@ from prompt_shield.evaluation.dataset import (
     dataset_summary,
     VALID_ENTITY_TYPES,
 )
+from prompt_shield.evaluation.hf_adapter import (
+    HF_LABEL_MAP,
+    from_hf_ai4privacy_record,
+    build_hf_ai4privacy_indian_corpus,
+    save_hf_corpus,
+)
 from prompt_shield.evaluation.metrics import (
     EntityMetrics,
     Discrepancy,
@@ -24,6 +30,10 @@ __all__ = [
     "validate_dataset",
     "dataset_summary",
     "VALID_ENTITY_TYPES",
+    "HF_LABEL_MAP",
+    "from_hf_ai4privacy_record",
+    "build_hf_ai4privacy_indian_corpus",
+    "save_hf_corpus",
     "EntityMetrics",
     "Discrepancy",
     "EvaluationReport",

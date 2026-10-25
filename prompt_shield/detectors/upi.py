@@ -2,9 +2,26 @@
 UPI (Unified Payments Interface) VPA / ID detector.
 """
 
+import json
 import re
-from typing import List, Set
+from pathlib import Path
+from typing import Dict, List, Set
 from prompt_shield.detectors.base import BaseDetector, Match
+
+
+def _load_npci_upi_registry() -> Dict[str, Dict[str, str]]:
+    registry_path = Path(__file__).resolve().parents[2] / "data" / "public_registries.json"
+    if registry_path.exists():
+        try:
+            with open(registry_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data.get("npci_upi_handles", {})
+        except Exception:
+            pass
+    return {}
+
+
+NPCI_UPI_REGISTRY: Dict[str, Dict[str, str]] = _load_npci_upi_registry()
 
 
 class UPIDetector(BaseDetector):
@@ -26,7 +43,7 @@ class UPIDetector(BaseDetector):
         r"([a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]|[a-zA-Z0-9])(?![a-zA-Z0-9])"
     )
 
-    # Major Indian Bank and PSP UPI handles
+    # Major Indian Bank and PSP UPI handles (merged with NPCI public registry)
     KNOWN_UPI_HANDLES: Set[str] = {
         # Google Pay
         "okhdfcbank", "oksbi", "okaxis", "okicici",
@@ -45,7 +62,7 @@ class UPIDetector(BaseDetector):
         "rbl", "federal", "dlb", "sib", "fbl", "scb",
         "hsbc", "dbs", "postbank", "airtel", "freecharge",
         "jupiteraxis", "slice", "fam", "amazonpay", "apl",
-    }
+    } | set(NPCI_UPI_REGISTRY.keys())
 
     # Standard email domains / TLDs to reject
     COMMON_EMAIL_PROVIDERS: Set[str] = {
@@ -127,6 +144,7 @@ class UPIDetector(BaseDetector):
                 if self.SSH_CONTEXT_PATTERN.search(preceding):
                     continue
 
+            handle_info = NPCI_UPI_REGISTRY.get(handle_lower, {})
             matches.append(
                 Match(
                     entity_type=self.entity_type,
@@ -138,6 +156,8 @@ class UPIDetector(BaseDetector):
                         "username": username,
                         "handle": handle_lower,
                         "is_known_handle": handle_lower in self.KNOWN_UPI_HANDLES,
+                        "psp_app": handle_info.get("psp_app", "Custom Bank PSP"),
+                        "sponsor_bank": handle_info.get("sponsor_bank", "Unknown"),
                     },
                 )
             )
